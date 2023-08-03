@@ -7,28 +7,61 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f3382071-0277-4931-a590-5e8e78a8a153" name="Changes" comment="" />
+    <list default="true" id="f3382071-0277-4931-a590-5e8e78a8a153" name="Changes" comment="Updated SampleJson function to have some different values.">
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IAdjustments.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IFileNameProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IMarkdownGeneratorStrategy.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/JsonUtils.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterAdjustments.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterFileNameProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterMarkdownGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DnDSourceConversion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DnDSourceConversion/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.exe" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.genruntimeconfig.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/apphost.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/ref/DnDSourceConversion.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/ref/DnDSourceConversion.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/refint/DnDSourceConversion.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/refint/DnDSourceConversion.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/DnDSourceConversion.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/DnDSourceConversion.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/DnDSourceConversion.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/DnDSourceConversion.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/rider.project.restore.info" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed7a2a1114604816b8d02d56d5bb1bf940e00/24/90bc710f/Parser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed7a2a1114604816b8d02d56d5bb1bf940e00/c7/60d7816a/YamlNode.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1e9897b8feee61f9c172d88ac915b81b7937b883fdc1ca65ec68f16eef94084/ThrowHelper.Node.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2477a472e4e4ed639587d920cb518ee3b3547ec4ac4769963e4b51987ff4ef/CharUnicodeInfo.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/29d413ab2fdd934034e94d91ac54dad4fd453660b2fe63750ffc2b4b22879/String.Manipulation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/29ea32a76b2a6b8eb246f247df6a6a86d887384b4c31db2a35effccdd86c24/JsonSerializerInternalReader.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2ef286e3638b9b309c1ca5979d80b7d6f1eb6b4af86c34a3b5838366420115a/JsonNode.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/56c668108a7075cb495c4944c018aaa9dd1e2dc736bbf72324c2c8f39ba7162/InvalidCastException.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6ef48ae941b79f93ceeae4a936d379de36b6dbf2dd6ca666f9a27f173cef2/JsonObject.IDictionary.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a9b35bc5d5da43a49af8d74dac7ab37ccc1bb654cb7dfe8f9a21501181ed9b/CastHelpers.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c651d095c368a316036f348381e75811db19be4f6e12c29cd32aacc9238a/Char.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/cfbc2c7cbffac53e11f497d87ca62277a792ac45a3c7ab5315812344cb857d/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d5e2b53d98acf75eef6c742f1375a24f19c843c9289164d572c83fad5ddb8ce/JsonObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed7a2a1114604816b8d02d56d5bb1bf940e00/f7/7f07e7ad/Serializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/206d123b9bbed5bdd37b83aa35ea671af716148561c352b1df61ac2ceaea288/ParallelLoopState.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3d5314c4b5f391de6f26e7ce0d430d6d2aa1d7a44530b874fdbb1a4a97374/File.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/87464f89c1e15a271ab999555fdb3eb603313c05258269beb6e76657562b7c/StringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/94c3358b0da3f33897e7328ca3087f1c27b8437fce7b649f8e6e71b76d7/Parallel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b1455a1b8a078d2fb2b94ca6b592e4fdf565fda99c679e809d992e9270/ValueTask.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d9c762de24154736c8af13ef2230c57c30a364af217c2f20ffcf50757541f11c/FileStream.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Coding/GitHub Repository/DnDSourceConversion/DnDSourceConversion/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectId" id="2TT5PgRJW1ReoQXaSKPwYymhohj" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -48,9 +81,9 @@
   },
   "keyToStringList": {
     "rider.external.source.directories": [
-      "C:\\Users\\brage\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
-      "C:\\Users\\brage\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
-      "C:\\Users\\brage\\AppData\\Local\\Symbols\\src"
+      "C:\\Users\\Brage\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\Brage\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\Brage\\AppData\\Local\\Symbols\\src"
     ]
   }
 }]]></component>
@@ -83,14 +116,25 @@
       <option name="presentableId" value="Default" />
       <updated>1691054214097</updated>
       <workItem from="1691054215138" duration="11639000" />
+      <workItem from="1691078199689" duration="14452000" />
     </task>
+    <task id="LOCAL−00001" summary="Updated SampleJson function to have some different values.">
+      <created>1691078488080</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1691078488080</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Updated SampleJson function to have some different values." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated SampleJson function to have some different values." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -101,19 +145,6 @@
           </properties>
           <option name="timeStamp" value="15" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DnDSourceConversion/Program.cs</url>
-          <line>61</line>
-          <properties documentPath="C:\Users\brage\Coding\Visual Studio Projects\DnDSourceConversion\DnDSourceConversion\Program.cs" initialLine="61" containingFunctionPresentation="">
-            <startOffsets>
-              <option value="1689" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1734" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

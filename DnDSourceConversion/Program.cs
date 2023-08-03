@@ -1,32 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Diagnostics;
-using System.Dynamic;
-using System.Text.Json;
+﻿using System.Dynamic;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using YamlDotNet.Core;
-using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
-using System.Linq;
-
-Console.WriteLine("Hello, World!");
+using DnDSourceConversion;
 
 const string INPUT_FILE_PATH = @"C:/Users/brage/OneDrive/Obsidian/Vaults/D&D/";
 const string INPUT_FILE_NAME = "bestiary-sublist-data";
 const string INPUT_FILE_EXTENSION = ".json";
 
-const string OUTPUT_FILE_PATH = @"C:/Users/brage/OneDrive/Obsidian/Vaults/D&D/Bestiary/";
-const string OUTPUT_FILE_NAME = "bestiary-sublist-data";
-const string OUTPUT_FILE_EXTENSION = ".yaml";
+const string OUTPUT_FILE_PATH = @"C:/Users/brage/OneDrive/Obsidian/Vaults/D&D/_Source/Official/Bestiary/";
+const string OUTPUT_FILE_EXTENSION = ".md";
 
-using var stream = new FileStream(INPUT_FILE_PATH + INPUT_FILE_NAME + INPUT_FILE_EXTENSION, FileMode.Open);
-
-using var reader = new StreamReader(stream);
-var json = reader.ReadToEnd();
-
-// string json = SampleJson();
+string? json = JsonUtils.GetJson(INPUT_FILE_PATH + INPUT_FILE_NAME + INPUT_FILE_EXTENSION);
 
 if (json is null)
 {
@@ -34,94 +20,48 @@ if (json is null)
     return;
 }
 
-json = json.TrimStart();
+json = JsonUtils.PrepareJsonForDynamicTyping(json);
+JsonNode? rootNode = JsonNode.Parse(json);
+rootNode = JsonUtils.FixJsonNode(rootNode);
 
-if (json[0] != '{')
-    json = "{\"head\":" + json + '}';
+JsonArray? array = rootNode.AsArray(); // Here i'm assuming that the root node is an array.
 
-// json = json.Replace('\'', '\"');
+var yamlSerializer = new Serializer();
+List<Task?> tasks = new(array.Count);
 
-var rootNode = JsonNode.Parse(json);
+var config = new MonsterConfig();
 
-if (rootNode!.AsObject().TryGetPropertyValue("head", out JsonNode? headNode))
-    rootNode = headNode;
-
-var array = rootNode.AsArray();
-for (var i = 0; i < array.Count; i++)
+for (int i = 0; i < array.Count; i++)
 {
-    var childNode = array[(Index)i];
+    JsonNode? childNode = array[(Index)i];
+    JsonObject? objectNode = childNode.AsObject(); // Here i'm assuming that the child node is an object.
 
-    var objectNode = childNode.AsObject();
-
-    List<string> invalidNames = objectNode.Where(kvp => kvp.Key.StartsWith('_'))
-        .Select(kvp => kvp.Key)
-        .ToList();
-
-    invalidNames.ForEach(name => objectNode.Remove(name));
+    config.Adjustments.Adjust(objectNode);
+    string name = config.FileNameProvider.GetFileName(objectNode, i.ToString());
     
     string childJson = objectNode.ToJsonString();
 
-    string name = i.ToString();
-    if (!objectNode.AsObject().TryGetPropertyValue("name", out JsonNode nameNode))
-        Console.WriteLine($"JsonObject at index: {i} has no name property.");
-    else
-        name = nameNode!.AsValue().GetValue<string>();
-    
     var converter = new ExpandoObjectConverter();
     dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(childJson, converter);
-
-    var yamlSerializer = new Serializer();
+    
     string yaml = yamlSerializer.Serialize(obj);
-
-    File.WriteAllText(OUTPUT_FILE_PATH + name + OUTPUT_FILE_EXTENSION, yaml);
+    yaml = yaml.TrimEnd();
+    
+    string md = config.MarkdownGeneratorStrategy.Generate(yaml);
+    
+    Task? task = WriteAsync(name, md, OUTPUT_FILE_EXTENSION);
+    
+    tasks.Add(task);
+    tasks.Add(task.ContinueWith(_ => Console.WriteLine(name + " done.")));
 }
 
-static string SampleJson()
+await Task.WhenAll(tasks);
+Console.WriteLine("All done.");
+
+async Task? WriteAsync(string name, string yaml, string fileExtension)
 {
-    return  """
-            {
-                "head":[
-                    {
-                        "Name":"Peter",
-                        "Age":22,
-                        "CourseDet": {
-                            "CourseName":"CS",
-                            "CourseDescription":"Computer Science"
-                        },
-                        "Subjects":[
-                            "Computer Languages",
-                            "Operating Systems"
-                        ]
-                    },
-                    {
-                        "Name":"Mark",
-                        "Age":34,
-                        "CourseDet": {
-                            "CourseName":"IT",
-                            "CourseDescription":"Information Technology
-                        },
-                        "Subjects":[
-                            "Databases",
-                            "Web Technologies",
-                            "Programming"
-                        ]
-                    },
-                    {
-                        "Name":"Sam",
-                        "Age":43,
-                        "CourseDet": {
-                            "CourseName":"CC",
-                            "CourseDescription":"Cloud Computing"
-                        },
-                        "Subjects":[
-                            "Cloud Architecture",
-                            "Cloud Security",
-                            "Cloud Services",
-                            "Cloud Programming"
-                        ]
-                    }
-                ]
-            }
-            """;
+    await using var fileStream = new FileStream(OUTPUT_FILE_PATH + name + fileExtension, FileMode.OpenOrCreate);
+                                  
+    await using var writer = new StreamWriter(fileStream);
+    await writer.WriteAsync(yaml);
 }
-

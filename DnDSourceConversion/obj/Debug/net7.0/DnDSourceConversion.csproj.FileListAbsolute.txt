@@ -16,3 +16,21 @@ C:\Users\brage\Coding\Visual Studio Projects\DnDSourceConversion\DnDSourceConver
 C:\Users\brage\Coding\Visual Studio Projects\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.pdb
 C:\Users\brage\Coding\Visual Studio Projects\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.genruntimeconfig.cache
 C:\Users\brage\Coding\Visual Studio Projects\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\ref\DnDSourceConversion.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\DnDSourceConversion.exe
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\DnDSourceConversion.deps.json
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\DnDSourceConversion.runtimeconfig.json
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\DnDSourceConversion.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\DnDSourceConversion.pdb
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\YamlDotNet.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.csproj.AssemblyReference.cache
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.AssemblyInfoInputs.cache
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.AssemblyInfo.cs
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.csproj.CoreCompileInputs.cache
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.csproj.CopyComplete
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\refint\DnDSourceConversion.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.pdb
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.genruntimeconfig.cache
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\ref\DnDSourceConversion.dll

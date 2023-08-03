@@ -78,47 +78,50 @@ for (var i = 0; i < array.Count; i++)
 
 static string SampleJson()
 {
-    return """
-           {
-               "head":[
-                   {
-                       "Name":"Peter",
-                       "Age":22,
-                       "CourseDet": {
-                           "CourseName":"CS",
-                           "CourseDescription":"Computer Science"
-                       },
-                       "Subjects":[
-                           "Computer Languages",
-                           "Operating Systems"
-                       ]
-                   },
-                   {
-                       "Name":"Peter",
-                       "Age":22,
-                       "CourseDet": {
-                           "CourseName":"CS",
-                           "CourseDescription":"Computer Science"
-                       },
-                       "Subjects":[
-                           "Computer Languages",
-                           "Operating Systems"
-                       ]
-                   },
-                   {
-                       "Name":"Peter",
-                       "Age":22,
-                       "CourseDet": {
-                           "CourseName":"CS",
-                           "CourseDescription":"Computer Science"
-                       },
-                       "Subjects":[
-                           "Computer Languages",
-                           "Operating Systems"
-                       ]
-                   }
-               ]
-           }
-           """;
+    return  """
+            {
+                "head":[
+                    {
+                        "Name":"Peter",
+                        "Age":22,
+                        "CourseDet": {
+                            "CourseName":"CS",
+                            "CourseDescription":"Computer Science"
+                        },
+                        "Subjects":[
+                            "Computer Languages",
+                            "Operating Systems"
+                        ]
+                    },
+                    {
+                        "Name":"Mark",
+                        "Age":34,
+                        "CourseDet": {
+                            "CourseName":"IT",
+                            "CourseDescription":"Information Technology
+                        },
+                        "Subjects":[
+                            "Databases",
+                            "Web Technologies",
+                            "Programming"
+                        ]
+                    },
+                    {
+                        "Name":"Sam",
+                        "Age":43,
+                        "CourseDet": {
+                            "CourseName":"CC",
+                            "CourseDescription":"Cloud Computing"
+                        },
+                        "Subjects":[
+                            "Cloud Architecture",
+                            "Cloud Security",
+                            "Cloud Services",
+                            "Cloud Programming"
+                        ]
+                    }
+                ]
+            }
+            """;
 }
 

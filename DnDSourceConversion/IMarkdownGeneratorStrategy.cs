@@ -4,5 +4,5 @@ namespace DnDSourceConversion;
 
 public interface IMarkdownGeneratorStrategy
 {
-    string Generate(string yaml);
+    string Generate(string frontMatterYaml, string statblockYaml);
 }

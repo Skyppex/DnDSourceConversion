@@ -8,25 +8,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f3382071-0277-4931-a590-5e8e78a8a153" name="Changes" comment="Updated SampleJson function to have some different values.">
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IAdjustments.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IFileNameProvider.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/IMarkdownGeneratorStrategy.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/JsonUtils.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterAdjustments.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterFileNameProvider.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterMarkdownGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DnDSourceConversion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DnDSourceConversion/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/IAdjustments.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/IAdjustments.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/IConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/IConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/IMarkdownGeneratorStrategy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/IMarkdownGeneratorStrategy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/MonsterAdjustments.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterAdjustments.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/MonsterConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/MonsterMarkdownGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/MonsterMarkdownGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.exe" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/bin/Debug/net7.0/DnDSourceConversion.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.genruntimeconfig.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DnDSourceConversion/obj/Debug/net7.0/DnDSourceConversion.pdb" afterDir="false" />
@@ -59,7 +54,7 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectId" id="2TT5PgRJW1ReoQXaSKPwYymhohj" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -76,7 +71,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {

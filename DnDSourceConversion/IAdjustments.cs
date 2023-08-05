@@ -4,5 +4,7 @@ namespace DnDSourceConversion;
 
 public interface IAdjustments
 {
-    void Adjust(JsonObject? jsonObject);
+    public void Adjust(JsonObject? jsonObject);
+    public void AdjustStatblock(JsonObject? objectNode);
+    public string HandleReplacements(string yaml);
 }

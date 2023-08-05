@@ -27,7 +27,7 @@ rootNode = JsonUtils.FixJsonNode(rootNode);
 JsonArray? array = rootNode.AsArray(); // Here i'm assuming that the root node is an array.
 
 var yamlSerializer = new Serializer();
-List<Task?> tasks = new(array.Count);
+// List<Task> tasks = new(array.Count);
 
 var config = new MonsterConfig();
 
@@ -36,26 +36,37 @@ for (int i = 0; i < array.Count; i++)
     JsonNode? childNode = array[(Index)i];
     JsonObject? objectNode = childNode.AsObject(); // Here i'm assuming that the child node is an object.
 
-    config.Adjustments.Adjust(objectNode);
     string name = config.FileNameProvider.GetFileName(objectNode, i.ToString());
-    
-    string childJson = objectNode.ToJsonString();
+    config.Adjustments.Adjust(objectNode);
+    string frontMatterJson = objectNode.ToJsonString();
 
     var converter = new ExpandoObjectConverter();
-    dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(childJson, converter);
+    dynamic frontMatter = JsonConvert.DeserializeObject<ExpandoObject>(frontMatterJson, converter);
     
-    string yaml = yamlSerializer.Serialize(obj);
-    yaml = yaml.TrimEnd();
+    string frontMatterYaml = yamlSerializer.Serialize(frontMatter);
+    frontMatterYaml = frontMatterYaml.TrimEnd();
+    frontMatterYaml = config.Adjustments.HandleReplacements(frontMatterYaml);
+
+    config.Adjustments.AdjustStatblock(objectNode);
+    string statBlockJson = objectNode.ToJsonString();
+    dynamic statblock = JsonConvert.DeserializeObject<ExpandoObject>(statBlockJson, converter);
+
+    string statblockYaml = yamlSerializer.Serialize(statblock);
+    statblockYaml = statblockYaml.TrimEnd();
+
+    statblockYaml = config.Adjustments.HandleReplacements(statblockYaml);
     
-    string md = config.MarkdownGeneratorStrategy.Generate(yaml);
+    string md = config.MarkdownGenerator.Generate(frontMatterYaml, statblockYaml);
     
-    Task? task = WriteAsync(name, md, OUTPUT_FILE_EXTENSION);
+    Write(name, md, OUTPUT_FILE_EXTENSION);
     
-    tasks.Add(task);
-    tasks.Add(task.ContinueWith(_ => Console.WriteLine(name + " done.")));
+    // Task? task = WriteAsync(name, md, OUTPUT_FILE_EXTENSION);
+    //
+    // tasks.Add(task);
+    // tasks.Add(task.ContinueWith(_ => Console.WriteLine(name + " done.")));
 }
 
-await Task.WhenAll(tasks);
+// await Task.WhenAll(tasks);
 Console.WriteLine("All done.");
 
 async Task? WriteAsync(string name, string yaml, string fileExtension)
@@ -64,4 +75,12 @@ async Task? WriteAsync(string name, string yaml, string fileExtension)
                                   
     await using var writer = new StreamWriter(fileStream);
     await writer.WriteAsync(yaml);
+}
+
+void Write(string name, string yaml, string fileExtension)
+{
+    using var fileStream = new FileStream(OUTPUT_FILE_PATH + name + fileExtension, FileMode.OpenOrCreate);
+                                  
+    using var writer = new StreamWriter(fileStream);
+    writer.Write(yaml);
 }

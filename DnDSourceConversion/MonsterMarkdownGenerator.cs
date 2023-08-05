@@ -11,13 +11,13 @@ public class MonsterMarkdownGenerator : IMarkdownGeneratorStrategy
         "monster",
     };
     
-    public string Generate(string yaml)
+    public string Generate(string frontMatterYaml, string statblockYaml)
     {
         StringBuilder builder = new();
         
-        AppendFrontMatter(yaml, builder);
+        AppendFrontMatter(frontMatterYaml, builder);
         builder.AppendLine();
-        AppendStatBlock(yaml, builder);
+        AppendStatBlock(statblockYaml, builder);
         
         return builder.ToString();
     }

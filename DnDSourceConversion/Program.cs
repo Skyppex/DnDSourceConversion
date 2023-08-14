@@ -54,7 +54,6 @@ for (int i = 0; i < array.Count; i++)
     
     string frontMatterYaml = yamlSerializer.Serialize(frontMatter);
     frontMatterYaml = frontMatterYaml.TrimEnd();
-    frontMatterYaml = config.Adjustments.HandleReplacements(frontMatterYaml, name);
 
     config.Adjustments.AdjustStatblock(objectNode, name);
     string statBlockJson = objectNode.ToJsonString();

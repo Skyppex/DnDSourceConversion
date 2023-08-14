@@ -13,7 +13,8 @@ public class MonsterFileNameProvider : IFileNameProvider
         }
         
         if (objectNode.AsObject().TryGetPropertyValue("name", out JsonNode nameNode))
-            return nameNode!.AsValue().GetValue<string>(); // Change the file name to the name property if it exists.
+            return nameNode!.AsValue().GetValue<string>() // Change the file name to the name property if it exists.
+                .Replace('"', '`'); // Replace illegal quotes with a legal one.
 
         Console.WriteLine($"JsonObject has no name property. Using default name: {defaultName}.");
         return defaultName;

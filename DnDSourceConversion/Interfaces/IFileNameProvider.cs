@@ -4,5 +4,5 @@ namespace DnDSourceConversion;
 
 public interface IFileNameProvider
 {
-    string GetFileName(JsonObject? jsonObject, string defaultName);
+    string GetFileName(JsonObject? objectNode, string defaultName);
 }

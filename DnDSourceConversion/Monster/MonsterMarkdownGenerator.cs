@@ -3,11 +3,10 @@ using System.Text.Json.Nodes;
 
 namespace DnDSourceConversion;
 
-public class MonsterMarkdownGenerator : IMarkdownGeneratorStrategy
+public class MonsterMarkdownGenerator : IMarkdownGenerator
 {
     private static readonly string[] s_tags =
     {
-        "dnd",
         "monster",
     };
     

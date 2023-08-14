@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using YamlDotNet.Serialization;
 using DnDSourceConversion;
-using YamlDotNet.Serialization.NamingConventions;
 
 const bool ASYNC = false;
 
@@ -22,7 +21,7 @@ string? json = JsonUtils.GetJson(INPUT_FILE_PATH + INPUT_FILE_NAME + INPUT_FILE_
 
 if (json is null)
 {
-    Console.WriteLine("Failed to Parse Json. Seems to be empty.");
+    Console.WriteLine("Failed to Parse Json. Could be empty.");
     return;
 }
 
@@ -32,10 +31,7 @@ rootNode = JsonUtils.FixJsonNode(rootNode);
 
 JsonArray? array = rootNode.AsArray(); // Here i'm assuming that the root node is an array.
 
-ISerializer? yamlSerializer = new SerializerBuilder()
-    .WithEventEmitter(nextEmitter => new QuoteSurroundingEventEmitter(nextEmitter))
-    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-    .Build();
+ISerializer? yamlSerializer = new Serializer();
 
 List<Task> tasks;
 

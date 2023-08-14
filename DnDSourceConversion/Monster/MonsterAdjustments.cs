@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace DnDSourceConversion;
 
@@ -25,18 +26,272 @@ public class MonsterAdjustments : IAdjustments
 
     public void AdjustStatblock(JsonObject? objectNode, string name)
     {
-        FixAc(objectNode, name);
-        FixHp(objectNode, name);
-        FixStats(objectNode, name);
         FixSize(objectNode, name);
         FixAlignment(objectNode, name);
+        FixSpeed(objectNode, name);
+        FixSummonedBySpell(objectNode, name);
+        FixAc(objectNode, name);
+        FixHp(objectNode, name);
+        FixSenses(objectNode, name);
+        FixStats(objectNode, name);
+        FixSpellcasting(objectNode, name);
         RemoveUnusedPropertiesInStatblock(objectNode);
     }
+    
+    private static readonly Dictionary<string, string> s_attackMap = new()
+    {
+        { "mw", "Melee Weapon Attack" },
+        { "m", "Melee Weapon Attack" },
+        { "rw", "Ranged Weapon Attack" },
+        { "r", "Ranged Weapon Attack" },
+        { "mw,rw", "Melee or Ranged Weapon Attack" },
+        { "ms", "Melee Spell Attack" },
+        { "rs", "Ranged Spell Attack" },
+        { "ms,rs", "Melee or Ranged Spell Attack" },
+    };
+
+    private static readonly Dictionary<string, string> s_statusMap = new()
+    {
+        {"concentration", "[[Duration|Concentration]]"},
+        {"concentration||concentrating", "[[Duration|Concentrating]]"}
+    };
 
     public string HandleReplacements(string yaml, string name)
     {
-        yaml = yaml.Replace("{@h}", "Hit: ");
+        yaml = ReplaceHitIdents(yaml);
+        yaml = ReplaceAttackIdents(yaml);
+        yaml = ReplaceAttackBonusIdents(yaml);
+        yaml = ReplaceDamageRollIdents(yaml);
+        yaml = ReplaceStatusIdents(yaml);
+        yaml = ReplaceSpellIdents(yaml);
+        yaml = ReplaceConditionIdents(yaml);
+        
         return yaml;
+        
+        static string ReplaceHitIdents(string yaml) => yaml.Replace("{@h}", "Hit: ");
+        
+        static string ReplaceAttackIdents(string yaml)
+        {
+            var regex = new Regex("{@atk .*?}");
+            MatchCollection matches = regex.Matches(yaml);
+
+            List<int> endIndexes = new(matches.Count);
+            List<string> attackStrings = new(matches.Count);
+
+            foreach (Match match in matches)
+            {
+                int index = yaml.IndexOf('}', match.Index);
+                string substring = yaml[match.Index..index];
+                substring = substring.Remove(0, 6);
+
+                if (!s_attackMap.ContainsKey(substring))
+                {
+                    int f;
+                }
+
+                string attackString = s_attackMap[substring];
+
+                endIndexes.Add(index);
+                attackStrings.Add(attackString);
+            }
+
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                Match match = matches[i];
+                int endIndex = endIndexes[i];
+                string attackString = attackStrings[i];
+                yaml = yaml.Remove(match.Index, endIndex - match.Index + 1);
+                yaml = yaml.Insert(match.Index, $"{attackString}.");
+            }
+
+            return yaml;
+        }
+        
+        static string ReplaceAttackBonusIdents(string yaml)
+        {
+            var regex = new Regex("{@hit .*?}");
+            MatchCollection matches = regex.Matches(yaml);
+
+            List<int> endIndexes = new(matches.Count);
+            List<string> hitStrings = new(matches.Count);
+
+            for (int i = 0; i < matches.Count; i++)
+            {
+                Match match = matches[i];
+                int index = yaml.IndexOf('}', match.Index);
+                string substring = yaml[match.Index..index];
+                substring = substring.Remove(0, 6);
+                substring = substring.Replace("summonSpellLevel", "summon spell level");
+                substring = substring.Trim();
+
+                endIndexes.Add(index);
+                hitStrings.Add(substring);
+            }
+
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                Match match = matches[i];
+                int endIndex = endIndexes[i];
+                string hitString = hitStrings[i];
+                yaml = yaml.Remove(match.Index, endIndex - match.Index + 1);
+                yaml = yaml.Insert(match.Index, $"+ {hitString}");
+            }
+
+            return yaml;
+        }
+        
+        static string ReplaceDamageRollIdents(string yaml)
+        {
+            var regex = new Regex("{@damage .*?}");
+            MatchCollection matches = regex.Matches(yaml);
+
+            List<int> endIndexes = new(matches.Count);
+            List<string> damageStrings = new(matches.Count);
+
+            foreach (Match match in matches)
+            {
+                int index = yaml.IndexOf('}', match.Index);
+                string substring = yaml[match.Index..index];
+                substring = substring.Remove(0, 9);
+
+                endIndexes.Add(index);
+                damageStrings.Add(substring);
+            }
+
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                Match match = matches[i];
+                int endIndex = endIndexes[i];
+                string damageString = damageStrings[i];
+                yaml = yaml.Remove(match.Index, endIndex - match.Index + 1);
+                yaml = yaml.Insert(match.Index, $"{damageString}");
+            }
+            
+            return yaml;
+        }
+        
+        static string ReplaceStatusIdents(string yaml)
+        {
+            var regex = new Regex("{@status .*?}");
+            MatchCollection matches = regex.Matches(yaml);
+
+            List<int> endIndexes = new(matches.Count);
+            List<string> statusStrings = new(matches.Count);
+
+            foreach (Match match in matches)
+            {
+                int index = yaml.IndexOf('}', match.Index);
+                string substring = yaml[match.Index..index];
+                substring = substring.Remove(0, 9);
+
+                endIndexes.Add(index);
+                statusStrings.Add(s_statusMap[substring]);
+            }
+
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                Match match = matches[i];
+                int endIndex = endIndexes[i];
+                string statusString = statusStrings[i];
+                yaml = yaml.Remove(match.Index, endIndex - match.Index + 1);
+                yaml = yaml.Insert(match.Index, statusString);
+            }
+
+            return yaml;
+        }
+
+        static string ReplaceSpellIdents(string yaml)
+        {
+            var regex = new Regex("{@spell .*?}");
+            MatchCollection matches = regex.Matches(yaml);
+            
+            List<int> endIndexes = new(matches.Count);
+            List<string> spellStrings = new(matches.Count);
+            
+            foreach (Match match in matches)
+            {
+                int index = yaml.IndexOf('}', match.Index);
+                string substring = yaml[match.Index..index];
+                substring = substring.Remove(0, 8);
+
+                endIndexes.Add(index);
+                spellStrings.Add($"[[{substring}]]");
+            }
+            
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                Match match = matches[i];
+                int endIndex = endIndexes[i];
+                string spellString = spellStrings[i];
+                yaml = yaml.Remove(match.Index, endIndex - match.Index + 1);
+                yaml = yaml.Insert(match.Index, spellString);
+            }
+
+            return yaml;
+        }
+
+        static string ReplaceConditionIdents(string yaml)
+        {
+            var regex = new Regex("{@condition .*?}");
+            MatchCollection matches = regex.Matches(yaml);
+            
+            List<int> endIndexes = new(matches.Count);
+            List<string> conditionStrings = new(matches.Count);
+            
+            foreach (Match match in matches)
+            {
+                int index = yaml.IndexOf('}', match.Index);
+                string substring = yaml[match.Index..index];
+                substring = substring.Remove(0, 12);
+
+                endIndexes.Add(index);
+                conditionStrings.Add(substring);
+            }
+            
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                Match match = matches[i];
+                int endIndex = endIndexes[i];
+                string conditionString = conditionStrings[i];
+                yaml = yaml.Remove(match.Index, endIndex - match.Index + 1);
+                yaml = yaml.Insert(match.Index, $"[[{conditionString}]]");
+            }
+
+            return yaml;
+        }
+    }
+
+    private static void FixSpeed(JsonObject? objectNode, string name)
+    {
+        if (!objectNode.TryGetPropertyValue("speed", out JsonNode? speedNode))
+        {
+            Console.WriteLine($"No speed property found. | {name}");
+            return;
+        }
+
+        JsonObject speedObject = speedNode.AsObject();
+        string speedString = "";
+        
+        if (speedObject.TryGetPropertyValue("walk", out JsonNode? walkNode))
+            speedString += $"{walkNode} ft.";
+        
+        if (speedObject.TryGetPropertyValue("fly", out JsonNode? flyNode))
+            speedString += $", fly {flyNode} ft.";
+
+        objectNode.Remove("speed");
+        objectNode.Add("speed", speedString);
+    }
+    
+    private static void FixSummonedBySpell(JsonObject? objectNode, string name)
+    {
+        if (!objectNode.TryGetPropertyValue("summonedBySpell", out JsonNode? spellNode))
+            return;
+
+        string spell = spellNode.GetValue<string>();
+        string spellName = spell.Until('|');
+        
+        objectNode.Remove("summonedBySpell");
+        objectNode.Add("summonedBySpell", $"[[{spellName}]]");
     }
     
     private static void FixSpecialAc(JsonObject? objectNode, string name)
@@ -300,6 +555,34 @@ public class MonsterAdjustments : IAdjustments
         objectNode.Add("hit_dice", JsonValue.Create(formula));
     }
 
+    private static void FixSenses(JsonObject? objectNode, string name)
+    {
+        List<string> senses = new();
+
+        if (objectNode.TryGetPropertyValue("passive", out JsonNode? passiveNode))
+        {
+            objectNode.Remove("passive");
+            senses.Add($"passive Perception {passiveNode}");
+        }
+
+        if (objectNode.TryGetPropertyValue("senses", out JsonNode? sensesNode))
+        {
+            var sensesArray = sensesNode as JsonArray;
+
+            foreach (JsonNode? sense in sensesArray)
+            {
+                string senseString = sense.GetValue<string>();
+                senses.Add(senseString);
+            }
+        }
+
+        if (senses.Count == 0)
+            return;
+        
+        objectNode.Remove("senses");
+        objectNode.Add("senses", JsonValue.Create(senses));
+    }
+    
     private static void FixStats(JsonObject? objectNode, string name)
     {
         if (!objectNode.TryGetPropertyValue("str", out JsonNode? strNode))
@@ -374,8 +657,10 @@ public class MonsterAdjustments : IAdjustments
             sizeArray.RemoveAt(i);
             sizeArray.Insert(i, JsonValue.Create(s_sizeMap[size.GetValue<string>()]));
         }
+        
+        objectNode.Remove("size");
+        objectNode.Add("size", sizeArray.SeparatedList(' '));
     }
-
     
     private static readonly Dictionary<string, string> s_alignmentMap = new()
     {
@@ -448,6 +733,104 @@ public class MonsterAdjustments : IAdjustments
                     break;
                 }
             }
+        }
+        
+        objectNode.Remove("alignment");
+        objectNode.Add("alignment", alignmentArray.SeparatedList(' '));
+    }
+
+    private static void FixSpellcasting(JsonObject? objectNode, string name)
+    {
+        if (!objectNode.TryGetPropertyValue("spellcasting", out JsonNode? spellcastingNode))
+            return;
+        
+        JsonObject spellcastingObject = spellcastingNode.AsArray()[0].AsObject();
+        
+        List<string> spells = new();
+        
+        if (!spellcastingObject.TryGetPropertyValue("name", out JsonNode? nameNode))
+            return;
+
+        string spellcastingName = nameNode.GetValue<string>();
+
+        if (spellcastingName != "Spellcasting")
+            spells.Add(spellcastingName);
+        
+        if (!spellcastingObject.TryGetPropertyValue("headerEntries", out JsonNode? headerEntriesNode))
+            return;
+        
+        spells.Add(headerEntriesNode.AsArray()[0].GetValue<string>());
+
+        if (spellcastingObject.TryGetPropertyValue("spells", out JsonNode? willNode))
+        {
+            JsonObject willObject = willNode.AsObject();
+            AddAtWillSpells(willObject, spells);
+        }
+
+        if (!spellcastingObject.TryGetPropertyValue("spells", out JsonNode? spellsNode))
+            return;
+
+        JsonObject spellsObject = spellsNode.AsObject();
+        
+        AddSpells(spellsObject, 0, spells);
+        AddSpells(spellsObject, 1, spells);
+        AddSpells(spellsObject, 2, spells);
+        AddSpells(spellsObject, 3, spells);
+        AddSpells(spellsObject, 4, spells);
+        AddSpells(spellsObject, 5, spells);
+        AddSpells(spellsObject, 6, spells);
+        AddSpells(spellsObject, 7, spells);
+        AddSpells(spellsObject, 8, spells);
+        AddSpells(spellsObject, 9, spells);
+
+        static void AddAtWillSpells(JsonObject spellsObject, List<string> spells)
+        {
+            
+        }
+        
+        static void AddSpells(JsonObject spellsObject, int level, List<string> spells)
+        {
+            if (!spellsObject.TryGetPropertyValue(level.ToString(), out JsonNode? levelNode))
+                return;
+
+            JsonObject levelObject = levelNode.AsObject();
+            string spellsString = level switch
+            {
+                0 => "Cantrips (at will): ",
+                1 => "1st level ",
+                2 => "2nd level ",
+                3 => "3rd level ",
+                _ => $"{level}th level ",
+            };
+            
+            if (levelObject.TryGetPropertyValue("slots", out JsonNode? slotsNode))
+            {
+                int slots = slotsNode.GetValue<int>();
+                spellsString += slots switch
+                {
+                    1 => "(1 slot): ",
+                    _ => $"({slots} slots): ",
+                };
+            }
+
+            if (!levelObject.TryGetPropertyValue("spells", out JsonNode? spellsNode))
+            {
+                Console.WriteLine($"No spells found in spellcasting level. | {level}");
+                return;
+            }
+            
+            JsonArray spellsArray = spellsNode.AsArray();
+
+            for (int i = 0; i < spellsArray.Count; i++)
+            {
+                JsonNode? spell = spellsArray[(Index)i];
+                spellsString += spell.GetValue<string>();
+                
+                if (i != spellsArray.Count - 1)
+                    spellsString += ", ";
+            }
+            
+            spells.Add(spellsString);
         }
     }
     

@@ -2,13 +2,13 @@ using System.Text;
 
 namespace DnDSourceConversion;
 
-public class WeaponMarkdownGenerator : IMarkdownGenerator
+public class MagicWeaponMarkdownGenerator : IMarkdownGenerator
 {
     private static readonly string[] s_tags =
     {
         "weapon",
-        "mundane",
-        "non-magical",
+        "magic-item",
+        "magical",
         "official-source",
     };
 

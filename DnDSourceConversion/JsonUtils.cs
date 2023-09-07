@@ -31,4 +31,15 @@ public static class JsonUtils
     }
 
     public static JsonNode? FixJsonNode(JsonNode? rootNode) => rootNode!.AsObject().TryGetPropertyValue("head", out JsonNode? headNode) ? headNode : rootNode;
+    
+    public static JsonNode DeepCopy(this JsonNode node)
+    {
+        if (node is JsonArray array)
+            return new JsonArray(array.Select(DeepCopy).ToArray());
+        
+        if (node is JsonObject obj)
+            return new JsonObject(obj.Select(pair => new KeyValuePair<string, JsonNode>(pair.Key, DeepCopy(pair.Value))));
+        
+        return JsonValue.Create(node.GetValue<object>());
+    }
 }

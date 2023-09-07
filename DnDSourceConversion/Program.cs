@@ -4,107 +4,47 @@ using System.Text.Json.Nodes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using YamlDotNet.Serialization;
-using DnDSourceConversion;
+using DnDSourceConversion;;
 
-const bool ASYNC = false;
-
-const string INPUT_FILE_PATH = @"C:/Users/brage/OneDrive/Obsidian/Vaults/D&D/";
-const string INPUT_FILE_NAME = "bestiary-sublist-data";
-const string INPUT_FILE_EXTENSION = ".json";
-
-const string OUTPUT_FILE_PATH = @"C:/Users/brage/OneDrive/Obsidian/Vaults/D&D/_Source/Official/Reference/Bestiary/";
-const string OUTPUT_FILE_EXTENSION = ".md";
+const bool PROCESS_ALL = true;
 
 var sw = Stopwatch.StartNew();
 
-string? json = JsonUtils.GetJson(INPUT_FILE_PATH + INPUT_FILE_NAME + INPUT_FILE_EXTENSION);
-
-if (json is null)
+if (PROCESS_ALL)
 {
-    Console.WriteLine("Failed to Parse Json. Could be empty.");
-    return;
-}
+    // Creates an instance of all classes that implements IConfig.
+    List<IConfig> configs = AppDomain.CurrentDomain
+        .GetAssemblies()
+        .SelectMany(a => a.GetTypes())
+        .Where(t => !t.IsAbstract && t.GetInterfaces().Contains(typeof(IConfig)))
+        .Select(t => Activator.CreateInstance(t))
+        .Cast<IConfig>()
+        .ToList();
 
-json = JsonUtils.PrepareJsonForDynamicTyping(json);
-JsonNode? rootNode = JsonNode.Parse(json);
-rootNode = JsonUtils.FixJsonNode(rootNode);
-
-JsonArray? array = rootNode.AsArray(); // Here i'm assuming that the root node is an array.
-
-ISerializer? yamlSerializer = new Serializer();
-
-List<Task> tasks;
-
-if (ASYNC)
-    tasks = new(array.Count);
-
-var config = new MonsterConfig();
-
-for (int i = 0; i < array.Count; i++)
-{
-    JsonNode? childNode = array[(Index)i];
-    JsonObject? objectNode = childNode.AsObject(); // Here i'm assuming that the child node is an object.
-
-    string name = config.FileNameProvider.GetFileName(objectNode, i.ToString());
-    config.Adjustments.Adjust(objectNode, name);
-    string frontMatterJson = objectNode.ToJsonString();
-
-    var converter = new ExpandoObjectConverter();
-    dynamic frontMatter = JsonConvert.DeserializeObject<ExpandoObject>(frontMatterJson, converter);
-    
-    string frontMatterYaml = yamlSerializer.Serialize(frontMatter);
-    frontMatterYaml = frontMatterYaml.TrimEnd();
-
-    config.Adjustments.AdjustStatblock(objectNode, name);
-    string statBlockJson = objectNode.ToJsonString();
-    dynamic statblock = JsonConvert.DeserializeObject<ExpandoObject>(statBlockJson, converter);
-
-    string statblockYaml = yamlSerializer.Serialize(statblock);
-    statblockYaml = statblockYaml.TrimEnd();
-
-    statblockYaml = config.Adjustments.HandleReplacements(statblockYaml, name);
-    
-    string md = config.MarkdownGenerator.Generate(frontMatterYaml, statblockYaml);
-
-    if (!ASYNC)
+    foreach (IConfig config in configs)
     {
-        Write(name, md, OUTPUT_FILE_EXTENSION);
-        Console.WriteLine($"{name} done.");
+        if (GlobalConfig.ASYNC)
+            Processor.ProcessAsync(config);
+        else
+            Processor.Process(config);
     }
+}
+else
+{
+    IConfig config = new SpellConfig();
+    
+    if (GlobalConfig.ASYNC)
+        Processor.ProcessAsync(config);
     else
-    {
-        Task? task = WriteAsync(name, md, OUTPUT_FILE_EXTENSION);
-
-        tasks.Add(task);
-        tasks.Add(task.ContinueWith(_ => Console.WriteLine($"{name} done.")));
-    }
+        Processor.Process(config);
 }
 
-if (ASYNC)
-    await Task.WhenAll(tasks);
-
-Console.WriteLine("All done.");
 sw.Stop();
-Console.WriteLine(sw.ElapsedMilliseconds);
+Console.WriteLine($"All done. {sw.ElapsedMilliseconds}");
 
-async Task? WriteAsync(string name, string yaml, string fileExtension)
+public static class GlobalConfig
 {
-    if (File.Exists(OUTPUT_FILE_PATH + name + fileExtension))
-        File.Delete(OUTPUT_FILE_PATH + name + fileExtension);
-    
-    await using var fileStream = new FileStream(OUTPUT_FILE_PATH + name + fileExtension, FileMode.OpenOrCreate);
-    
-    await using var writer = new StreamWriter(fileStream);
-    await writer.WriteAsync(yaml);
-}
-
-void Write(string name, string yaml, string fileExtension)
-{
-    if (File.Exists(OUTPUT_FILE_PATH + name + fileExtension))
-        File.Delete(OUTPUT_FILE_PATH + name + fileExtension);
-
-    using var fileStream = new FileStream(OUTPUT_FILE_PATH + name + fileExtension, FileMode.OpenOrCreate);
-                                  
-    using var writer = new StreamWriter(fileStream);
-    writer.Write(yaml);
+    public const bool ASYNC = false;
+    public const bool DRY_RUN = false; // When ture, no files will be written to.
+    public const bool FIND_IMAGES = false;
 }

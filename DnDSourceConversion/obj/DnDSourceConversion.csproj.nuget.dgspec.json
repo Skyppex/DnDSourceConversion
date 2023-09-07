@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "YamlDotNet": {
               "target": "Package",
               "version": "[13.1.1, )"

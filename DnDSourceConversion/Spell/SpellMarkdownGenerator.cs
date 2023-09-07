@@ -2,16 +2,14 @@ using System.Text;
 
 namespace DnDSourceConversion;
 
-public class WeaponMarkdownGenerator : IMarkdownGenerator
+public class SpellMarkdownGenerator : IMarkdownGenerator
 {
     private static readonly string[] s_tags =
     {
-        "weapon",
-        "mundane",
-        "non-magical",
+        "spell",
         "official-source",
     };
-
+    
     public string Generate(string frontMatterYaml, string statblockYaml)
     {
         StringBuilder builder = new();
@@ -22,7 +20,7 @@ public class WeaponMarkdownGenerator : IMarkdownGenerator
         
         return builder.ToString();
     }
-    
+
     private static void AppendFrontMatter(string yaml, StringBuilder builder)
     {
         builder.AppendLine("---");
@@ -38,7 +36,7 @@ public class WeaponMarkdownGenerator : IMarkdownGenerator
     private static void AppendStatBlock(string yaml, StringBuilder builder)
     {
         builder.AppendLine("```statblock");
-        builder.AppendLine("layout: Weapon");
+        builder.AppendLine("layout: Spell");
         builder.AppendLine(yaml);
         builder.AppendLine("```");
     }

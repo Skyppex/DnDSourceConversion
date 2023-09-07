@@ -1,5 +1,4 @@
 using System.Text;
-using System.Text.Json.Nodes;
 
 namespace DnDSourceConversion;
 
@@ -8,6 +7,7 @@ public class MonsterMarkdownGenerator : IMarkdownGenerator
     private static readonly string[] s_tags =
     {
         "monster",
+        "official-source",
     };
     
     public string Generate(string frontMatterYaml, string statblockYaml)

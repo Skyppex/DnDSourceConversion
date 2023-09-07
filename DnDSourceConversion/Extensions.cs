@@ -46,6 +46,48 @@ public static class StringExtensions
         int index = text.IndexOf(separator);
         return text[..index];
     }
+    
+    public static string Join(this IEnumerable<string> strings, string separator) => string.Join(separator, strings);
+    
+    public static string Join(this IEnumerable<string> strings, string separator, string lastSeparator)
+    {
+        using IEnumerator<string?> en = strings.GetEnumerator();
+
+        if (!en.MoveNext())
+            return string.Empty;
+
+        string? firstValue = en.Current;
+
+        if (!en.MoveNext())
+        {
+            // Only one value available
+            return firstValue ?? string.Empty;
+        }
+
+        // Null separator and values are handled by the StringBuilder
+        var result = new StringBuilder();
+
+        result.Append(firstValue);
+
+        do
+        {
+            result.Append(separator);
+            result.Append(en.Current);
+        }
+        while (en.MoveNext());
+
+        return result.ToString();
+    }
+    
+    public static string ToUpperFirstLetter(this string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        char[] a = text.ToCharArray();
+        a[0] = char.ToUpper(a[0]);
+        return new string(a);
+    }
 }
 
 public static class JsonArrayExtensions

@@ -1,11 +1,9 @@
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
-using static DnDSourceConversion.StatblockUtils;
-
 namespace DnDSourceConversion;
 
-public class WeaponAdjustments : IAdjustments
+public class MagicWeaponAdjustments : IAdjustments
 {
     private static readonly string[] s_unwantedProperties =
     {
@@ -27,22 +25,34 @@ public class WeaponAdjustments : IAdjustments
 
     public void AdjustStatblock(JsonObject? objectNode, string name)
     {
+        FixBaseItem(objectNode, name);
         FixRarity(objectNode, name);
+        FixAttunement(objectNode, name);
         FixDamageStatblock(objectNode, name);
         FixWeaponCategory(objectNode, name);
         FixPropertiesForStatblock(objectNode, name);
-        SeparatedTextFromArray(objectNode, "notes", ", ", name);
+        FixAttachedSpells(objectNode, name);
+        ConsolidateNotes(objectNode, name);
         RemoveUnusedPropertiesInStatblock(objectNode);
     }
 
     public string HandleReplacements(string yaml, string name)
     {
+        if (name is "Will of the Talon")
+        {
+            int f;
+        }
+        
         yaml = yaml.ReplaceConditionIdents()
                    .ReplaceItemIdents()
                    .ReplaceQuickRefIdents()
-                   .ReplaceIdentWithValue("dice", roll => $"0 ({roll})")
+                   .ReplaceIdentWithValue("dice", roll => $"{roll}")
+                   .ReplaceIdentWithValue("damage", roll => $"{roll}")
                    .ReplaceIdentWithValue("action", action => $"[[Actions|{action}]]")
+                   .ReplaceIdentWithValue("spell", spell => $"[[{spell}]]")
+                   .ReplaceIdentWithValue("skill", skill => $"[[{skill}]]")
                    .ReplaceIdentWithValue("note", note => $"Note: {note}")
+                   .ReplaceIdentWithValue("creature", creature => $"[[{creature}]]")
                    .SurroundWithLinkBrackets("[Dd]ifficult [Tt]errain", "Movement")
                    .SurroundWithLinkBrackets("AC", "Armor Class")
                    .SurroundWithLinkBrackets("DC", "Difficulty Class")
@@ -66,12 +76,12 @@ public class WeaponAdjustments : IAdjustments
                    .SurroundWithLinkBrackets("[Rr]adiant [Dd]amage", "Damage")
                    .SurroundWithLinkBrackets("[Ss]lashing [Dd]amage", "Damage")
                    .SurroundWithLinkBrackets("[Tt]hunder [Dd]amage", "Damage");
-        
+
         return yaml;
     }
 
     public void Dispose() { }
-    
+
     private static void FixProperties(JsonObject? objectNode, string name)
     {
         if (!objectNode.TryGetPropertyValue("_fullEntries", out JsonNode? fullEntriesNode))
@@ -82,7 +92,7 @@ public class WeaponAdjustments : IAdjustments
         
         JsonArray? fullEntriesArray = fullEntriesNode.AsArray();
         List<PropertyEntry> properties = new();
-        
+
         foreach (JsonNode? entry in fullEntriesArray)
         {
             switch (entry)
@@ -92,7 +102,7 @@ public class WeaponAdjustments : IAdjustments
                     AddValueToNotes(objectNode, value);
                     break;
                 }
-        
+
                 case JsonObject entryObject:
                 {
                     if (!entryObject.TryGetPropertyValue("wrapped", out JsonNode? wrappedNode))
@@ -103,17 +113,48 @@ public class WeaponAdjustments : IAdjustments
                         if (!entryObject.TryGetPropertyValue("entries", out JsonNode? entriesNode))
                             throw new InvalidProgramException("No entries in entry with name 'Special'.");
             
-                        JsonArray? entriesArray = entriesNode.AsArray();
-                        List<string> special = entriesArray.Select(e => e.GetValue<string>())
-                                                           .Where(s => !string.IsNullOrEmpty(s))
-                                                           .ToList();
-        
                         string propertyName = nameNode.GetValue<string>();
-                        properties.Add(new PropertyEntry(propertyName, special));
+                        JsonArray? entriesArray = entriesNode.AsArray();
+
+                        switch (propertyName)
+                        {
+                            case "Special":
+                            {
+                                properties.Add(new PropertyEntry("Special", entriesArray.Select(e => e.GetValue<string>()).ToList()));
+                                break;
+                            }
+
+                            case "Random Properties":
+                            {
+                                List<string> items = new();
+
+                                foreach (JsonNode? e in entriesArray)
+                                {
+                                    switch (e)
+                                    {
+                                        case JsonValue value:
+                                            items.Add(value.GetValue<string>());
+                                            break;
+        
+                                        case JsonObject obj:
+                                            obj.TryGetPropertyValue("type", out JsonNode? typeNode);
+                                            if (typeNode.GetValue<string>() != "list")
+                                                throw new InvalidProgramException("Random Properties entry is not a list.");
+            
+                                            obj.TryGetPropertyValue("items", out JsonNode? itemsNode);
+                                            items.AddRange(itemsNode.AsArray().Select(i => i.GetValue<string>()).ToList());
+                                            break;
+                                    }
+                                }
+                                
+                                properties.Add(new PropertyEntry("Random Properties", items));
+                                break;
+                            }
+                        }
                         
                         continue;
                     }
-        
+
                     switch (wrappedNode)
                     {
                         case JsonValue value:
@@ -121,14 +162,18 @@ public class WeaponAdjustments : IAdjustments
                             AddValueToNotes(objectNode, value);
                             break;
                         }
-        
+
                         case JsonObject wrappedObject:
                         {
                             if (!wrappedObject.TryGetPropertyValue("name", out JsonNode? nameNode))
-                                throw new InvalidProgramException("No property name in wrapped object.");
-            
+                            {
+                                wrappedObject.TryGetPropertyValue("items", out JsonNode? itemsNode);
+                                properties.Add(new PropertyEntry("Variants", itemsNode.AsArray().Select(i => i.GetValue<string>()).ToList()));
+                                continue;
+                            }
+
                             string propertyName = nameNode.GetValue<string>();
-        
+                            
                             if (propertyName != "Special")
                             {
                                 properties.Add(new PropertyEntry(propertyName, null));
@@ -138,19 +183,64 @@ public class WeaponAdjustments : IAdjustments
                             break;
                         }
                     }
-        
+
                     break;
                 }
             }
         }
         
         objectNode.Remove("_fullEntries");
-        objectNode.Add("properties", new JsonArray(properties.Select(p => JsonValue.Create(p.Name)).ToArray()));
-        
-        if (properties.Any(p => p.Special is not null))
+        objectNode.Add("properties", new JsonArray(properties
+                                                        .Where(p => p.Name != "Random Properties")
+                                                        .Where(p => p.Name != "Variants")
+                                                        .Select(p => JsonValue.Create(p.Name))
+                                                        .ToArray()));
+
+        foreach (PropertyEntry propertyEntry in properties.Where(p => p.Values is not null))
         {
-            List<string> specialStrings = properties.FirstOrDefault(p => p.Special is not null).Special;
-            objectNode.Add("special", new JsonArray(specialStrings.Select(s => JsonValue.Create(s)).ToArray()));
+            switch (propertyEntry.Name)
+            {
+                case "Special":
+                {
+                    List<string> specialStrings = properties.FirstOrDefault(p => p.Values is not null).Values;
+                    objectNode.Add("special", new JsonArray(specialStrings.Select(s => JsonValue.Create(s)).ToArray()));
+                    break;
+                }
+                
+                case "Random Properties":
+                {
+                    List<string> randomProperties = propertyEntry.Values;
+                    int i = -1;
+                    List<object> entries = randomProperties.Select<string, object>(rp =>
+                    {
+                        i++;
+                        if (i == 0)
+                            return rp;
+                        
+                        int index = rp.IndexOf("{@table");
+                        int semiColonIndex = rp.IndexOf(';', index);
+                        int firstPipeIndex = rp.IndexOf('|', semiColonIndex);
+                        int lastPipeIndex = rp.LastIndexOf('|');
+                        int endIndex = rp.IndexOf('}');
+                        string number = rp[..index].Trim();
+                        string itemName = rp[(index + 7)..semiColonIndex].Trim();
+                        string tableName = rp[(semiColonIndex + 1)..firstPipeIndex].Trim();
+                        string tableNameAlias = rp[(lastPipeIndex + 1)..endIndex].Trim();
+
+                        return new Dictionary<string, string>() {{$"{itemName}", $"{number} [[{tableName}|{tableNameAlias}]]"}};
+                    }).ToList();
+                    
+                    objectNode.Add("randomProperties", JsonValue.Create(entries));
+                    break;
+                }
+
+                case "Variants":
+                {
+                    List<string> variants = propertyEntry.Values;
+                    objectNode.Add("variants", JsonValue.Create(string.Join(", ", variants)));
+                    break;
+                }
+            }
         }
     }
 
@@ -196,6 +286,34 @@ public class WeaponAdjustments : IAdjustments
         objectNode.Add("versatileDamage", JsonValue.Create(versatileDamageType));
     }
     
+    private static void RemoveUnusedPropertiesInStatblock(JsonObject? objectNode)
+    {
+        string[] unusedProperties =
+        {
+            "page",
+            "source",
+            "otherSources",
+            "srd",
+            "basicRules",
+        };
+
+        foreach (string property in unusedProperties)
+            objectNode.Remove(property);
+    }
+
+    private static void FixBaseItem(JsonObject? objectNode, string name)
+    {
+        if (!objectNode.TryGetPropertyValue("baseItem", out JsonNode? baseItemNode))
+            return;
+        
+        string baseItem = baseItemNode.GetValue<string>();
+        int pipeIndex = baseItem.IndexOf('|');
+        baseItem = baseItem[..pipeIndex];
+
+        objectNode.Remove("baseItem");
+        objectNode.Add("baseItem", JsonValue.Create($"({baseItem})"));
+    }
+    
     private static void FixRarity(JsonObject? objectNode, string name)
     {
         if (!objectNode.TryGetPropertyValue("rarity", out JsonNode? rarityNode))
@@ -211,6 +329,27 @@ public class WeaponAdjustments : IAdjustments
         objectNode.Add("rarity", JsonValue.Create(rarity.ToUpperFirstLetter()));
     }
 
+    private static void FixAttunement(JsonObject? objectNode, string name)
+    {
+        if (!objectNode.TryGetPropertyValue("reqAttune", out JsonNode? reqAttuneNode))
+            return;
+        
+        object reqAttune = reqAttuneNode.GetValue<object>();
+        string reqAttuneString = "(requires attunement)";
+
+        switch (reqAttune)
+        {
+            case string s:
+            {
+                reqAttuneString += $" {s}";
+                break;
+            }
+        }
+        
+        objectNode.Remove("reqAttune");
+        objectNode.Add("reqAttune", JsonValue.Create(reqAttuneString));
+    }
+    
     private static void FixDamageStatblock(JsonObject? objectNode, string name)
     {
         if (!objectNode.TryGetPropertyValue("damage", out JsonNode? damageNode))
@@ -277,21 +416,39 @@ public class WeaponAdjustments : IAdjustments
         }
     }
 
-    private static void RemoveUnusedPropertiesInStatblock(JsonObject? objectNode)
+    private static void FixAttachedSpells(JsonObject? objectNode, string name)
     {
-        string[] unusedProperties =
-        {
-            "page",
-            "source",
-            "otherSources",
-            "srd",
-            "basicRules",
-        };
+        if (!objectNode.TryGetPropertyValue("attachedSpells", out JsonNode? attachedSpellsNode))
+            return;
 
-        foreach (string property in unusedProperties)
-            objectNode.Remove(property);
+        JsonArray spellsArray = attachedSpellsNode.AsArray();
+
+        string spells = spellsArray.Select(spell => $"[[{spell.GetValue<string>()
+                .Split(" ")
+                .Select(s => s.ToUpperFirstLetter())
+                .Join(" ")}]]")
+            .Join(", ");
+        
+        bool requiresAttunement = objectNode.TryGetPropertyValue("reqAttune", out _);
+        spells = spells.Insert(0, requiresAttunement ? "While attuned to this item you can cast the following spells:\n" : "You can cast the following spells:\n");
+
+        objectNode.Remove("attachedSpells");
+        objectNode.Add("attachedSpells", JsonValue.Create(spells));
     }
+    
+    private static void ConsolidateNotes(JsonObject? objectNode, string name)
+    {
+        if (!objectNode.TryGetPropertyValue("notes", out JsonNode? notesNode))
+            return;
+        
+        JsonArray notesArray = notesNode.AsArray();
 
+        string notes = string.Join('\n', notesArray);
+
+        objectNode.Remove("notes");
+        objectNode.Add("notes", JsonValue.Create(notes));
+    }
+    
     private static void AddValueToNotes(JsonObject objectNode, JsonValue value)
     {
         value = JsonValue.Create(value.GetValue<string>());
@@ -308,13 +465,13 @@ public class WeaponAdjustments : IAdjustments
 
     private struct PropertyEntry
     {
-        public PropertyEntry(string name, List<string>? special)
+        public PropertyEntry(string name, List<string>? values)
         {
             Name = name;
-            Special = special;
+            Values = values;
         }
         
         public string Name { get; }
-        public List<string>? Special { get; }
+        public List<string>? Values { get; }
     }
 }

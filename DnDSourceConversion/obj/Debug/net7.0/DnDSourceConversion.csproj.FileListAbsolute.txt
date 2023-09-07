@@ -34,3 +34,7 @@ D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\ne
 D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.pdb
 D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\DnDSourceConversion.genruntimeconfig.cache
 D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\obj\Debug\net7.0\ref\DnDSourceConversion.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\System.Drawing.Common.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\Coding\GitHub Repository\DnDSourceConversion\DnDSourceConversion\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
